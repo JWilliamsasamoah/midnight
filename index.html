@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Midnight Basketball</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <img src="logo.png" alt="Midnight Basketball Logo">
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="teams.html">Teams</a></li>
+      <li><a href="#">Schedule</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Scoreboard Section -->
+  <div class="scoreboard">
+    <div class="row">
+      <div class="team home">
+        <div class="team-name" contenteditable="true">CAVALIERS</div>
+        <div class="team-score" id="home-score">0</div>
+        <div class="timeouts">Timeouts: <span id="home-timeouts">0</span></div>
+        <div class="fouls">Fouls: <span id="home-fouls">0</span></div>
+      </div>
+
+      <div class="clock-section">
+        <div class="clock" id="clock">00:00</div>
+        <input type="text" id="time-input" placeholder="MM:SS">
+        <button class="set-time-btn" onclick="setCustomTime()">Set Time</button>
+        <div class="period" id="period">PERIOD 1</div>
+      </div>
+
+      <div class="team away">
+        <div class="team-name" contenteditable="true">WARRIORS</div>
+        <div class="team-score" id="away-score">0</div>
+        <div class="timeouts">Timeouts: <span id="away-timeouts">0</span></div>
+        <div class="fouls">Fouls: <span id="away-fouls">0</span></div>
+      </div>
+    </div>
+
+    <div class="row controls">
+        <div class="control-section">
+          <h3>Home</h3>
+          <div class="button-grid">
+            <button onclick="updateScore('home', -1)">- POINT</button>
+            <button onclick="updateScore('home', 1)">+ POINT</button>
+          </div>
+          <button class="timeout-btn" onclick="updateTimeout('home')">TIMEOUT</button>
+          <button class="timeout-btn" onclick="updateFouls('home')">FOUL</button>
+          <button class="undo-btn" onclick="undoAction('home')">UNDO</button>
+        </div>
+      
+        <div class="middle-section">
+          <button class="timeout-btn" onclick="officialTimeout()">OFFICIAL TIMEOUT</button>
+          <button class="timeout-btn" onclick="toggleClock()">START CLOCK</button>
+          <button class="court-btn" onclick="toggleCourtVision()">COURT VISION MODE</button>
+          <button class="clear-btn" onclick="clearScoreboard()">CLEAR SCOREBOARD</button>
+        </div>
+      
+        <div class="control-section">
+          <h3>Away</h3>
+          <div class="button-grid">
+            <button onclick="updateScore('away', -1)">- POINT</button>
+            <button onclick="updateScore('away', 1)">+ POINT</button>
+          </div>
+          <button class="timeout-btn" onclick="updateTimeout('away')">TIMEOUT</button>
+          <button class="timeout-btn" onclick="updateFouls('away')">FOUL</button>
+          <button class="undo-btn" onclick="undoAction('away')">UNDO</button>
+        </div>
+      </div>
+      
+
+  <!-- Court Vision Overlay -->
+  <div class="court-overlay" id="court-overlay">
+    <div class="court-container">
+      <span class="close-btn" onclick="toggleCourtVision()">✖</span>
+      <canvas id="court-canvas"></canvas>
+      <div class="toolbar">
+        <button class="toolbar-btn" onclick="toggleDrawMode()">Draw</button>
+        <button class="toolbar-btn" onclick="toggleEraseMode()">Erase</button>
+        <button class="toolbar-btn" onclick="clearCanvas()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

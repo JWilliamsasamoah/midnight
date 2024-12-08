@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Management</title>
+  <link rel="stylesheet" href="teams_style.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <img src="logo.png" alt="Midnight Basketball Logo">
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="teams.html">Teams</a></li>
+      <li><a href="#">Schedule</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Team Management Section -->
+  <div class="team-management">
+    <h1>Team Management</h1>
+    <button class="add-team-btn" onclick="addTeam()">Add Team</button>
+
+    <div id="teams-container"></div>
+  </div>
+
+  <script src="teams_script.js"></script>
+</body>
+</html>
