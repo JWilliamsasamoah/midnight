@@ -3,93 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Midnight Basketball</title>
+  <title>Midnight Basketball iScore</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="logo">
       <img src="logo.png" alt="Midnight Basketball Logo">
     </div>
     <ul class="nav-links">
-      <li><a href="#">Home</a></li>
+      <li><a href="index.html">Home</a></li>
       <li><a href="teams.html">Teams</a></li>
       <li><a href="#">Schedule</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="https://torontohousing.ca/programs-and-tenant-engagement/youth-programs/midnight-basketball">Contact</a></li>
     </ul>
   </nav>
 
-  <!-- Scoreboard Section -->
-  <div class="scoreboard">
-    <div class="row">
-      <div class="team home">
-        <div class="team-name" contenteditable="true">CAVALIERS</div>
-        <div class="team-score" id="home-score">0</div>
-        <div class="timeouts">Timeouts: <span id="home-timeouts">0</span></div>
-        <div class="fouls">Fouls: <span id="home-fouls">0</span></div>
+  <!-- Main Container -->
+  <div class="container">
+
+    <main class="scoreboard-container">
+
+      <!-- Home Team Section -->
+      <div class="team-section" id="home-section">
+        <select id="home-team-select" onchange="setTeams()">
+            <option value="">Select Home Team</option>
+        </select>
+        <div class="score" id="home-score">0</div>
+        <p>Fouls: <span id="home-fouls">0</span></p>
+        <p>Timeouts: <span id="home-timeouts">0</span></p>
+        <ul id="home-roster" class="roster"></ul>
+        <button class="substitute-btn" onclick="openSubstitutionModal('home')">Substitute</button>
       </div>
 
-      <div class="clock-section">
-        <div class="clock" id="clock">00:00</div>
-        <input type="text" id="time-input" placeholder="MM:SS">
-        <button class="set-time-btn" onclick="setCustomTime()">Set Time</button>
-        <div class="period" id="period">PERIOD 1</div>
+      <!-- Clock and Game Controls Section -->
+      <div class="clock-controls-section">
+        <div class="clock-section">
+          <div class="clock" id="game-clock">07:00</div>
+          <div class="period">Period: 1</div>
+          <input type="text" id="time-input" placeholder="MM:SS">
+        </div>
+        <div class="game-controls">
+        <button class="btn" onclick="setCustomTime()">Set Time</button>
+          <button class="btn" onclick="startStopClock()">Start/Stop Clock</button>
+          <button class="btn" onclick="resetGame()">Clear Clock</button>
+          <button class="btn" onclick="generateStats()">Halftime Stats</button>
+          <button class="btn" onclick="updateFouls('home')">Home Foul</button>
+          <button class="btn" onclick="updateFouls('away')">Away Foul</button>
+          <button class="btn" onclick="updateTimeout('home')">Home Timeout</button>
+          <button class="btn" onclick="updateTimeout('away')">Away Timeout</button>
+          <button class="btn" onclick="updateScore(2); recordStat('2 Points')">+2 Points</button>
+        <button class="btn" onclick="updateScore(3); recordStat('3 Points')">+3 Points</button>
+        <button class="btn" onclick="updateScore(1); recordStat('Free Throw')">Free Throw</button>
+        <button class="btn" onclick="recordStat('Assist')">Assist</button>
+        <button class="btn" onclick="recordStat('Rebound')">Rebound</button>
+        <button class="btn" onclick="recordStat('Block')">Block</button>
+        <button class="btn" onclick="recordStat('Steal')">Steal</button>
+        <button class="btn" onclick="recordStat('Turnover')">Turnover</button>
+        
+        </div>
       </div>
 
-      <div class="team away">
-        <div class="team-name" contenteditable="true">WARRIORS</div>
-        <div class="team-score" id="away-score">0</div>
-        <div class="timeouts">Timeouts: <span id="away-timeouts">0</span></div>
-        <div class="fouls">Fouls: <span id="away-fouls">0</span></div>
+      <!-- Away Team Section -->
+      <div class="team-section" id="away-section">
+        <select id="away-team-select" onchange="setTeams()">
+            <option value="">Select Away Team</option>
+          </select>
+        <div class="score" id="away-score">0</div>
+        <p>Fouls: <span id="away-fouls">0</span></p>
+        <p>Timeouts: <span id="away-timeouts">0</span></p>
+        <ul id="away-roster" class="roster"></ul>
+        <button class="substitute-btn" onclick="openSubstitutionModal('away')">Substitute</button>
+      </div>
+
+    </main>
+
+    <!-- Substitution Modal -->
+    <div id="substitution-modal" class="modal">
+      <div class="modal-content">
+        <h3>Substitute Players</h3>
+        <p>Players On Court:</p>
+        <select id="players-on-court" multiple></select>
+        <p>Players Off Court:</p>
+        <select id="players-off-court" multiple></select>
+        <button class="btn" onclick="performSubstitution()">Confirm Substitution</button>
+        <button class="btn close-btn" onclick="closeSubstitutionModal()">Close</button>
       </div>
     </div>
 
-    <div class="row controls">
-        <div class="control-section">
-          <h3>Home</h3>
-          <div class="button-grid">
-            <button onclick="updateScore('home', -1)">- POINT</button>
-            <button onclick="updateScore('home', 1)">+ POINT</button>
-          </div>
-          <button class="timeout-btn" onclick="updateTimeout('home')">TIMEOUT</button>
-          <button class="timeout-btn" onclick="updateFouls('home')">FOUL</button>
-          <button class="undo-btn" onclick="undoAction('home')">UNDO</button>
-        </div>
-      
-        <div class="middle-section">
-          <button class="timeout-btn" onclick="officialTimeout()">OFFICIAL TIMEOUT</button>
-          <button class="timeout-btn" onclick="toggleClock()">START CLOCK</button>
-          <button class="court-btn" onclick="toggleCourtVision()">COURT VISION MODE</button>
-          <button class="clear-btn" onclick="clearScoreboard()">CLEAR SCOREBOARD</button>
-        </div>
-      
-        <div class="control-section">
-          <h3>Away</h3>
-          <div class="button-grid">
-            <button onclick="updateScore('away', -1)">- POINT</button>
-            <button onclick="updateScore('away', 1)">+ POINT</button>
-          </div>
-          <button class="timeout-btn" onclick="updateTimeout('away')">TIMEOUT</button>
-          <button class="timeout-btn" onclick="updateFouls('away')">FOUL</button>
-          <button class="undo-btn" onclick="undoAction('away')">UNDO</button>
-        </div>
-      </div>
-      
-
-  <!-- Court Vision Overlay -->
-  <div class="court-overlay" id="court-overlay">
-    <div class="court-container">
-      <span class="close-btn" onclick="toggleCourtVision()">✖</span>
-      <canvas id="court-canvas"></canvas>
-      <div class="toolbar">
-        <button class="toolbar-btn" onclick="toggleDrawMode()">Draw</button>
-        <button class="toolbar-btn" onclick="toggleEraseMode()">Erase</button>
-        <button class="toolbar-btn" onclick="clearCanvas()">Clear</button>
-      </div>
-    </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

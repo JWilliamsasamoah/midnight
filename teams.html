@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Team Management</title>
+  <title>Team Standings</title>
   <link rel="stylesheet" href="teams_style.css">
 </head>
 <body>
-  <!-- Navigation Bar -->
+    <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="logo">
       <img src="logo.png" alt="Midnight Basketball Logo">
@@ -15,17 +15,42 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="teams.html">Teams</a></li>
-      <li><a href="#">Schedule</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="">Schedule</a></li>
+      <li><a href="https://torontohousing.ca/programs-and-tenant-engagement/youth-programs/midnight-basketball">Contact</a></li>
     </ul>
   </nav>
+  <div class="container">
+    <h1>Teams
+        
+    </h1>
+    <button id="add-team-btn" class="primary-btn">Add Team</button>
+    <table id="teams-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Team</th>
+          <th>Wins</th>
+          <th>Losses</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="teams-container"></tbody>
+    </table>
+  </div>
 
-  <!-- Team Management Section -->
-  <div class="team-management">
-    <h1>Team Management</h1>
-    <button class="add-team-btn" onclick="addTeam()">Add Team</button>
-
-    <div id="teams-container"></div>
+  <!-- Modal for Roster Management -->
+  <div id="roster-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeRosterModal()">&times;</span>
+      <h2 id="team-roster-title">Roster</h2>
+      <div class="input-group">
+        <input type="text" id="player-name" placeholder="Player Name">
+        <input type="number" id="player-number" placeholder="Jersey Number">
+        <button onclick="addPlayerToRoster()" class="primary-btn">Add Player</button>
+      </div>
+      <ul id="player-list" class="player-list"></ul>
+      <button onclick="saveRoster()" class="save-btn">Save Roster</button>
+    </div>
   </div>
 
   <script src="teams_script.js"></script>

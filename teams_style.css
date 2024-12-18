@@ -1,8 +1,19 @@
+/* General Styles */
 body {
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #1d3557;
+    padding: 0;
+    color: #fff;
+  }
+  
+  .container {
+    max-width: 1000px;
+    margin: 20px auto;
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
   }
   
   /* Navigation Bar Styling */
@@ -10,8 +21,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #d62828;
-    padding: 10px 20px;
+    background-color: #d32f2f;
+    padding: 15px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
   
   .logo img {
@@ -28,176 +40,229 @@ body {
   
   .nav-links li a {
     text-decoration: none;
-    color: #ffffff;
+    color: #fff;
     font-weight: bold;
     font-size: 1rem;
-    padding: 8px 15px;
+    padding: 10px 20px;
     border-radius: 5px;
+    transition: background-color 0.3s, transform 0.2s;
   }
   
   .nav-links li a:hover {
-    background-color: #f77f77;
+    background-color: #b71c1c;
+    transform: translateY(-3px);
   }
   
-  /* Team Management Section */
-  .team-management {
-    width: 90%;
-    max-width: 800px;
-    margin: 40px auto;
-    background-color: #ffffff;
-    padding: 20px;
-    border: 3px solid #d62828;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  /* Heading Styling */
+  h1 {
     text-align: center;
+    color: #d32f2f;
+    font-size: 2.5rem;
+    margin: 20px 0;
   }
   
-  .add-team-btn {
-    background-color: #d62828;
-    color: #ffffff;
+  /* Buttons */
+  .primary-btn,
+  .save-btn,
+  .delete-btn {
+    background-color: #d32f2f;
+    color: #fff;
     padding: 10px 20px;
-    font-size: 1rem;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-weight: bold;
-  }
-  
-  .add-team-btn:hover {
-    background-color: #f77f77;
-  }
-  
-  .team {
-    background-color: #f1f1f1;
-    padding: 20px;
-    margin: 20px 0;
-    border: 2px solid #d62828;
-    border-radius: 10px;
-  }
-  
-  .team h2 {
-    margin: 0 0 10px;
-    color: #d62828;
-  }
-  
-  .player-form input {
-    padding: 10px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 40%;
-  }
-  
-  .add-player-btn {
-    background-color: #1d3557;
-    color: #ffffff;
-    padding: 10px 20px;
     font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s;
   }
   
-  .add-player-btn:hover {
-    background-color: #457b9d;
+  .primary-btn:hover,
+  .save-btn:hover,
+  .delete-btn:hover {
+    background-color: #b71c1c;
+    transform: translateY(-3px);
   }
   
-  .roster {
-    margin-top: 20px;
-    text-align: left;
-  }
-  
-  .roster ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .roster li {
-    background-color: #fff;
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin: 5px 0;
-    border-radius: 5px;
-  }
-  /* Save and Delete Buttons */
-.save-team-btn,
-.delete-team-btn {
-  background-color: #1d3557;
-  color: #ffffff;
-  padding: 10px 15px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  margin: 5px;
-}
-
-.save-team-btn:hover {
-  background-color: #457b9d;
-}
-
-.delete-team-btn {
-  background-color: #d62828;
-}
-
-.delete-team-btn:hover {
-  background-color: #f77f77;
-}
-/* Team Styling */
-.team {
-    background-color: #f1f1f1;
-    padding: 20px;
-    margin: 20px 0;
-    border: 2px solid #d62828;
-    border-radius: 10px;
-    cursor: pointer;
-    position: relative;
-  }
-  
-  /* Team Name Styling */
-  .team-name {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #d62828;
-    margin: 0;
-    padding: 10px;
-    background-color: #ffffff;
-    border-radius: 5px;
-    user-select: none;
-  }
-  
-  /* Hide the team details initially */
-  .team-details {
-    display: none;
-    margin-top: 15px;
-  }
-  
-  /* Save and Delete Buttons */
-  .save-team-btn,
-  .delete-team-btn {
-    background-color: #1d3557;
-    color: #ffffff;
+  button {
     padding: 10px 15px;
-    font-size: 1rem;
+    margin: 5px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-weight: bold;
-    margin: 5px;
+    background-color: #d32f2f;
+    color: #fff;
+    transition: background-color 0.3s, transform 0.2s;
   }
   
-  .delete-team-btn {
-    background-color: #d62828;
+  button:hover {
+    background-color: #b71c1c;
+    transform: translateY(-3px);
   }
   
-  .save-team-btn:hover {
-    background-color: #457b9d;
+  /* Table Styles */
+  table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
   }
   
-  .delete-team-btn:hover {
-    background-color: #f77f77;
+  th,
+  td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #444;
+    color: #fff;
+  }
+  
+  th {
+    background-color: #d32f2f;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1rem;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #2a2a2a;
+  }
+  
+  tr:hover {
+    background-color: #333;
+  }
+  
+  /* Delete Button */
+  .delete-btn {
+    background-color: #dc3545;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c82333;
+  }
+  
+  /* Modal Styles */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.5s ease-in-out;
+    color: #fff;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #d32f2f;
+  }
+  
+  .close-btn:hover {
+    color: #b71c1c;
+  }
+  
+  /* Input Group */
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"],
+  input[type="number"] {
+    padding: 12px;
+    border: 1px solid #444;
+    background-color: #2a2a2a;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  input[type="text"]:focus,
+  input[type="number"]:focus {
+    outline: none;
+    border-color: #d32f2f;
+  }
+  
+  /* Player List */
+  .player-list {
+    list-style: none;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .player-list li {
+    background: #2a2a2a;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .player-list li button {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .player-list li button:hover {
+    background-color: #c82333;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideOut {
+    to {
+      transform: translateY(-100%);
+    }
   }
   
