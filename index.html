@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Midnight Basketball iScore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -40,31 +41,29 @@
 
       <!-- Clock and Game Controls Section -->
       <div class="clock-controls-section">
-        <div class="clock-section">
-          <div class="clock" id="game-clock">07:00</div>
-          <div class="period">Period: 1</div>
-          <input type="text" id="time-input" placeholder="MM:SS">
-        </div>
-        <div class="game-controls">
-        <button class="btn" onclick="setCustomTime()">Set Time</button>
-          <button class="btn" onclick="startStopClock()">Start/Stop Clock</button>
-          <button class="btn" onclick="resetGame()">Clear Clock</button>
-          <button class="btn" onclick="generateStats()">Halftime Stats</button>
-          <button class="btn" onclick="updateFouls('home')">Home Foul</button>
-          <button class="btn" onclick="updateFouls('away')">Away Foul</button>
-          <button class="btn" onclick="updateTimeout('home')">Home Timeout</button>
-          <button class="btn" onclick="updateTimeout('away')">Away Timeout</button>
-          <button class="btn" onclick="updateScore(2); recordStat('2 Points')">+2 Points</button>
-        <button class="btn" onclick="updateScore(3); recordStat('3 Points')">+3 Points</button>
-        <button class="btn" onclick="updateScore(1); recordStat('Free Throw')">Free Throw</button>
-        <button class="btn" onclick="recordStat('Assist')">Assist</button>
-        <button class="btn" onclick="recordStat('Rebound')">Rebound</button>
-        <button class="btn" onclick="recordStat('Block')">Block</button>
-        <button class="btn" onclick="recordStat('Steal')">Steal</button>
-        <button class="btn" onclick="recordStat('Turnover')">Turnover</button>
-        
-        </div>
-      </div>
+  <div class="clock-section">
+    <div class="clock" id="game-clock">00:00</div>
+    <input type="text" id="time-input" placeholder="MM:SS">
+  </div>
+  <div class="game-controls">
+    <button class="btn" onclick="setCustomTime()">Set Time</button>
+    <button class="btn" onclick="startStopClock()">Start/Stop Clock</button>
+    <button class="btn" onclick="resetGame()">Clear Clock</button>
+    <button class="btn" onclick="updateFouls('home')">Home Foul</button>
+    <button class="btn" onclick="updateFouls('away')">Away Foul</button>
+    <button class="btn" onclick="updateTimeout('home')">Home Timeout</button>
+    <button class="btn" onclick="updateTimeout('away')">Away Timeout</button>
+    <button class="btn" onclick="updateScore(2); recordStat('2 Points')">+2 Points</button>
+    <button class="btn" onclick="updateScore(3); recordStat('3 Points')">+3 Points</button>
+    <button class="btn" onclick="updateScore(1); recordStat('Free Throw')">Free Throw</button>
+    <button class="btn" onclick="recordStat('Assist')">Assist</button>
+    <button class="btn" onclick="recordStat('Rebound')">Rebound</button>
+    <button class="btn" onclick="recordStat('Block')">Block</button>
+    <button class="btn" onclick="recordStat('Steal')">Steal</button>
+    <button class="btn" onclick="recordStat('Turnover')">Turnover</button>
+  </div>
+</div>
+
 
       <!-- Away Team Section -->
       <div class="team-section" id="away-section">
@@ -94,8 +93,48 @@
     </div>
 
   </div>
-
+  <div class="toggle-buttons">
+    <button id="stats-toggle" class="toggle-btn active" onclick="toggleView('stats')">Stats Sheet</button>
+    <button id="charts-toggle" class="toggle-btn" onclick="toggleView('charts')">Charts</button>
+  </div>
+  
+  <!-- Stats Content -->
+  <div id="stats-view" class="toggle-content active">
+    <div id="tabs">
+      <button id="home-tab" class="tab active" onclick="showTab('home')">Home Team</button>
+      <button id="away-tab" class="tab" onclick="showTab('away')">Away Team</button>
+      <button class="tab" onclick="generateStats()">Download Stats</button>
+    </div>
+    <div id="tab-content">
+      <div id="home-stats-tab" class="tab-content active">
+        <h3>Home Team Stats</h3>
+        <div id="home-stats"></div>
+      </div>
+      <div id="away-stats-tab" class="tab-content">
+        <h3>Away Team Stats</h3>
+        <div id="away-stats"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Charts Content -->
+  <div id="charts-view" class="toggle-content">
+    <div id="chart-container">
+      <div id="shooting-accuracy-chart"></div>
+      <div id="rebounds-turnovers-chart" style="margin-top: 20px;"></div>
+    </div>
+  </div>
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
   <script src="script.js"></script>
+  
+  <!-- ApexCharts -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<!-- Grid.js -->
+<link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+
+
 </body>
 </html>

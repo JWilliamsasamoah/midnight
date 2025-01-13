@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bracket Matchmaking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bracket {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .round {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
+        .round-label {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .match {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background-color: #e3f2fd;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .match:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+        .match.active {
+            border: 2px solid #42a5f5;
+        }
+        .match.lost {
+            background-color: #e0e0e0;
+            color: #9e9e9e;
+            pointer-events: none;
+        }
+        .champion {
+            background-color: #ffeb3b;
+            font-weight: bold;
+            color: #000;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .custom-team {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .custom-team input {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-md rounded p-6 w-full max-w-6xl">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">Tournament Bracket</h1>
+
+        <!-- Input Section -->
+        <div id="teamInputSection" class="mb-6">
+            <label for="teamCount" class="block text-gray-600 font-medium mb-2">Number of Teams</label>
+            <input 
+                type="number" 
+                id="teamCount" 
+                class="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" 
+                placeholder="Enter number of teams (4, 8, 16, etc.)">
+            <button 
+                id="addTeams" 
+                class="mt-4 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+                Customize Teams
+            </button>
+        </div>
+
+        <!-- Customize Team Names Section -->
+        <div id="customTeamSection" class="hidden mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Customize Team Names</h2>
+            <div id="teamInputs" class="flex flex-col gap-2"></div>
+            <button 
+                id="generateBracket" 
+                class="mt-4 w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">
+                Generate Bracket
+            </button>
+        </div>
+
+        <!-- Bracket Section -->
+        <div id="bracketContainer" class="hidden">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Tournament Bracket</h2>
+            <div id="bracket" class="bracket"></div>
+        </div>
+    </div>
+
+    <script>
+        const teamCountInput = document.getElementById('teamCount');
+        const addTeamsButton = document.getElementById('addTeams');
+        const customTeamSection = document.getElementById('customTeamSection');
+        const teamInputs = document.getElementById('teamInputs');
+        const generateBracketButton = document.getElementById('generateBracket');
+        const bracketContainer = document.getElementById('bracketContainer');
+        const bracket = document.getElementById('bracket');
+
+        let teams = [];
+
+        addTeamsButton.addEventListener('click', () => {
+            const teamCount = parseInt(teamCountInput.value);
+            if (isNaN(teamCount) || !Number.isInteger(Math.log2(teamCount))) {
+                alert('Please enter a valid number of teams (4, 8, 16, etc.).');
+                return;
+            }
+
+            teams = Array.from({ length: teamCount }, (_, i) => `Team ${i + 1}`);
+
+            teamInputs.innerHTML = '';
+            teams.forEach((team, index) => {
+                const teamRow = document.createElement('div');
+                teamRow.className = 'custom-team';
+                teamRow.innerHTML = `
+                    <input type="text" value="${team}" data-index="${index}" class="team-name-input" placeholder="Team ${index + 1}">
+                `;
+                teamInputs.appendChild(teamRow);
+            });
+
+            customTeamSection.classList.remove('hidden');
+        });
+
+        generateBracketButton.addEventListener('click', () => {
+            document.querySelectorAll('.team-name-input').forEach((input, index) => {
+                teams[index] = input.value;
+            });
+            customTeamSection.classList.add('hidden');
+            renderBracket(teams);
+        });
+
+        function renderBracket(teams) {
+            const rounds = Math.log2(teams.length);
+            const bracketData = [];
+            let currentRound = teams;
+
+            for (let i = 0; i < rounds; i++) {
+                bracketData.push(currentRound);
+                currentRound = new Array(currentRound.length / 2).fill(null);
+            }
+            bracketData.push(["Champion"]);
+
+            bracket.innerHTML = '';
+            bracketData.forEach((round, roundIndex) => {
+                const roundDiv = document.createElement('div');
+                roundDiv.className = 'round';
+
+                const roundLabel = document.createElement('div');
+                roundLabel.className = 'round-label';
+                roundLabel.textContent = getRoundLabel(roundIndex, bracketData.length);
+                roundDiv.appendChild(roundLabel);
+
+                round.forEach((match, matchIndex) => {
+                    const matchDiv = document.createElement('div');
+                    matchDiv.className = 'match';
+                    matchDiv.textContent = match || `Match ${matchIndex + 1}`;
+                    matchDiv.addEventListener('click', () => handleMatchClick(roundIndex, matchIndex, matchDiv, bracketData));
+
+                    roundDiv.appendChild(matchDiv);
+                });
+
+                bracket.appendChild(roundDiv);
+            });
+
+            bracketContainer.classList.remove('hidden');
+        }
+
+        function handleMatchClick(roundIndex, matchIndex, matchDiv, bracketData) {
+            if (matchDiv.classList.contains('lost')) return;
+
+            const nextRound = bracket.children[roundIndex + 1];
+            const nextMatch = nextRound.children[Math.floor(matchIndex / 2) + 1];
+
+            nextMatch.textContent = matchDiv.textContent;
+            matchDiv.classList.add('lost');
+        }
+
+        function getRoundLabel(roundIndex, totalRounds) {
+            if (roundIndex === totalRounds - 1) return 'Final';
+            if (roundIndex === totalRounds - 2) return 'Semifinals';
+            if (roundIndex === totalRounds - 3) return 'Quarterfinals';
+            return `Round of ${2 ** (totalRounds - roundIndex)}`;
+        }
+    </script>
+</body>
+</html>
