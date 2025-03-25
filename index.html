@@ -12,7 +12,7 @@
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="logo">
-      <img src="logop.png" alt="Midnight Basketball Logo">
+      <img src="logo.png" alt="Midnight Basketball Logo">
     </div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
@@ -21,120 +21,142 @@
       <li><a href="https://torontohousing.ca/programs-and-tenant-engagement/youth-programs/midnight-basketball">Contact</a></li>
     </ul>
   </nav>
-
-  <!-- Main Container -->
-  <div class="container">
-
-    <main class="scoreboard-container">
-
-      <!-- Home Team Section -->
-      <div class="team-section" id="home-section">
-        <select id="home-team-select" onchange="setTeams()">
-            <option value="">Select Home Team</option>
-        </select>
-        <div class="score" id="home-score">0</div>
-        <p>Fouls: <span id="home-fouls">0</span></p>
-        <p>Timeouts: <span id="home-timeouts">0</span></p>
-        <ul id="home-roster" class="roster"></ul>
-        <button class="substitute-btn" onclick="openSubstitutionModal('home')">Substitute</button>
-      </div>
-
-      <!-- Clock and Game Controls Section -->
-      <div class="clock-controls-section">
-  <div class="clock-section">
-    <div class="clock" id="game-clock">00:00</div>
-    <input type="text" id="time-input" placeholder="MM:SS">
-  </div>
-  <div class="game-controls">
-    <button class="btn" onclick="setCustomTime()">Set Time</button>
-    <button class="btn" onclick="startStopClock()">Start/Stop Clock</button>
-    <button class="btn" onclick="resetGame()">Clear Clock</button>
-    <button class="btn" onclick="updateFouls('home')">Home Foul</button>
-    <button class="btn" onclick="updateFouls('away')">Away Foul</button>
-    <button class="btn" onclick="updateTimeout('home')">Home Timeout</button>
-    <button class="btn" onclick="updateTimeout('away')">Away Timeout</button>
-    <button class="btn" onclick="updateScore(2); recordStat('2 Points')">+2 Points</button>
-    <button class="btn" onclick="updateScore(3); recordStat('3 Points')">+3 Points</button>
-    <button class="btn" onclick="updateScore(1); recordStat('Free Throw')">Free Throw</button>
-    <button class="btn" onclick="recordStat('Assist')">Assist</button>
-    <button class="btn" onclick="recordStat('Rebound')">Rebound</button>
-    <button class="btn" onclick="recordStat('Block')">Block</button>
-    <button class="btn" onclick="recordStat('Steal')">Steal</button>
-    <button class="btn" onclick="recordStat('Turnover')">Turnover</button>
-  </div>
+<!-- Toggle Buttons -->
+<div class="toggle-buttons">
+  <button id="stats-toggle" class="toggle-btn" onclick="toggleView('stats')">Stats</button>
+  <button id="scoreboard-toggle" class="toggle-btn active" onclick="toggleView('scoreboard')">Scoreboard</button>
+  <button id="charts-toggle" class="toggle-btn" onclick="toggleView('charts')">Charts</button>
 </div>
 
+    <!-- Scoreboard Content -->
+    <div id="scoreboard-view" class="toggle-content active">
+      <main class="scoreboard-container">
 
-      <!-- Away Team Section -->
-      <div class="team-section" id="away-section">
-        <select id="away-team-select" onchange="setTeams()">
-            <option value="">Select Away Team</option>
+        <!-- Home Team Section -->
+        <div class="team-section" id="home-section">
+          <select id="home-team-select" onchange="setTeams()">
+              <option value="">Select Home Team</option>
           </select>
-        <div class="score" id="away-score">0</div>
-        <p>Fouls: <span id="away-fouls">0</span></p>
-        <p>Timeouts: <span id="away-timeouts">0</span></p>
-        <ul id="away-roster" class="roster"></ul>
-        <button class="substitute-btn" onclick="openSubstitutionModal('away')">Substitute</button>
-      </div>
+          <div class="score" id="home-score">0</div>
+          <p>Fouls: <span id="home-fouls">0</span></p>
+          <p>Timeouts: <span id="home-timeouts">0</span></p>
+          <ul id="home-roster" class="roster"></ul>
+          <button class="substitute-btn" onclick="openSubstitutionModal('home')">Substitute</button>
+        </div>
 
-    </main>
+        <!-- Clock and Game Controls Section -->
+        <div class="clock-controls-section">
+          <div class="clock-section">
+            <div class="clock" id="game-clock">00:00</div>
+            <input type="text" id="time-input" placeholder="MM:SS">
+          </div>
+          <div class="game-controls">
+            <button class="btn" onclick="setCustomTime()">Set Time</button>
+            <button class="btn" onclick="startStopClock()">Start/Stop Clock</button>
+            <button class="btn" onclick="resetGame()">Clear Clock</button>
+            <button class="btn" onclick="updateFouls('home')">Home Foul</button>
+            <button class="btn" onclick="updateFouls('away')">Away Foul</button>
+            <button class="btn" onclick="updateTimeout('home')">Home Timeout</button>
+            <button class="btn" onclick="updateTimeout('away')">Away Timeout</button>
+            <button class="btn" onclick="updateScore(2); recordStat('2 Points')">+2 Points</button>
+            <button class="btn" onclick="updateScore(3); recordStat('3 Points')">+3 Points</button>
+            <button class="btn" onclick="updateScore(1); recordStat('Free Throw')">Free Throw</button>
+            <button class="btn" onclick="recordShotAttempt('2 Points')">Missed 2PT</button>
+            <button class="btn"onclick="recordShotAttempt('3 Points')">Missed 3PT</button>
+            <button class="btn"onclick="recordShotAttempt('Free Throw')">Missed FT</button>
+            <button class="btn" onclick="recordStat('Assist')">Assist</button>
+            <button class="btn" onclick="recordStat('Rebound')">Rebound</button>
+            <button class="btn" onclick="recordStat('Block')">Block</button>
+            <button class="btn" onclick="recordStat('Steal')">Steal</button>
+            <button class="btn" onclick="recordStat('Turnover')">Turnover</button>
+          </div>
+        </div>
 
-    <!-- Substitution Modal -->
-    <div id="substitution-modal" class="modal">
-      <div class="modal-content">
-        <h3>Substitute Players</h3>
-        <p>Players On Court:</p>
-        <select id="players-on-court" multiple></select>
-        <p>Players Off Court:</p>
-        <select id="players-off-court" multiple></select>
-        <button class="btn" onclick="performSubstitution()">Confirm Substitution</button>
-        <button class="btn close-btn" onclick="closeSubstitutionModal()">Close</button>
-      </div>
+        <!-- Away Team Section -->
+        <div class="team-section" id="away-section">
+          <select id="away-team-select" onchange="setTeams()">
+              <option value="">Select Away Team</option>
+            </select>
+          <div class="score" id="away-score">0</div>
+          <p>Fouls: <span id="away-fouls">0</span></p>
+          <p>Timeouts: <span id="away-timeouts">0</span></p>
+          <ul id="away-roster" class="roster"></ul>
+          <button class="substitute-btn" onclick="openSubstitutionModal('away')">Substitute</button>
+        </div>
+
+      </main>
     </div>
 
-  </div>
-  <div class="toggle-buttons">
-    <button id="stats-toggle" class="toggle-btn active" onclick="toggleView('stats')">Stats Sheet</button>
-    <button id="charts-toggle" class="toggle-btn" onclick="toggleView('charts')">Charts</button>
+    <!-- Stats Content -->
+    <div id="stats-view" class="toggle-content">
+      <div id="tabs">
+          <button id="home-tab" class="tab active" onclick="showTab('home')">Home Team</button>
+          <button id="away-tab" class="tab" onclick="showTab('away')">Away Team</button>
+          <button id="log-tab" class="tab" onclick="showTab('log')">Player Log</button>
+          <button class="tab" onclick="generateStats()">Download Stats</button>
+
+      </div>
+  
+      <div id="tab-content">
+          <div id="home-stats-tab" class="tab-content active">
+              <h3>Home Team Stats</h3>
+              <div id="home-stats"></div>
+          </div>
+          <div id="away-stats-tab" class="tab-content">
+              <h3>Away Team Stats</h3>
+              <div id="away-stats"></div>
+          </div>
+          <div id="player-log-tab" class="tab-content">
+            <button class="tab"  onclick="saveGame()">💾 Save Game</button>
+          <button class="tab" onclick="loadSavedGames()">📂 Load Games</button>
+
+          <ul id="saved-games-list"></ul>
+              <h3>Live Player Log</h3>
+              <div id="player-log"></div>
+          </div>
+      </div>
   </div>
   
-  <!-- Stats Content -->
-  <div id="stats-view" class="toggle-content active">
-    <div id="tabs">
-      <button id="home-tab" class="tab active" onclick="showTab('home')">Home Team</button>
-      <button id="away-tab" class="tab" onclick="showTab('away')">Away Team</button>
-      <button class="tab" onclick="generateStats()">Download Stats</button>
+
+       <!-- Logs Section -->
+  <section id="logs" class="tab-content">
+    <h3>Live Play Logs</h3>
+    <ul id="logs-list"></ul>
+  </section>
     </div>
-    <div id="tab-content">
-      <div id="home-stats-tab" class="tab-content active">
-        <h3>Home Team Stats</h3>
-        <div id="home-stats"></div>
-      </div>
-      <div id="away-stats-tab" class="tab-content">
-        <h3>Away Team Stats</h3>
-        <div id="away-stats"></div>
+
+    <!-- Charts Content -->
+    <div id="charts-view" class="toggle-content">
+      <div id="chart-container">
+        <div id="shooting-accuracy-chart"></div>
+        <div id="rebounds-turnovers-chart"></div>
       </div>
     </div>
+
   </div>
-  
-  <!-- Charts Content -->
-  <div id="charts-view" class="toggle-content">
-    <div id="chart-container">
-      <div id="shooting-accuracy-chart"></div>
-      <div id="rebounds-turnovers-chart" style="margin-top: 20px;"></div>
+
+  <!-- Substitution Modal -->
+  <div id="substitution-modal" class="modal">
+    <div class="modal-content">
+      <h3>Substitute Players</h3>
+      <p>Players On Court:</p>
+      <select id="players-on-court" multiple></select>
+      <p>Players Off Court:</p>
+      <select id="players-off-court" multiple></select>
+      <button class="btn" onclick="performSubstitution()">Confirm Substitution</button>
+      <button class="btn close-btn" onclick="closeSubstitutionModal()">Close</button>
     </div>
   </div>
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
   <script src="script.js"></script>
   
   <!-- ApexCharts -->
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-<!-- Grid.js -->
-<link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
-
+  <!-- Grid.js -->
+  <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
 
 </body>
 </html>

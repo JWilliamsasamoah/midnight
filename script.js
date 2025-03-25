@@ -153,15 +153,18 @@ function updateScore(points) {
     awayScore += points;
     document.getElementById("away-score").textContent = awayScore;
   }
-
   recordStat(points === 1 ? "Free Throw" : points === 2 ? "2 Points" : "3 Points");
-  // Add animation class
-  scoreElement.classList.add("score-animate");
+  // ✅ Update Live Player Log immediately (without downloading file)
+  updateLiveLog();
+updateReboundsTurnoversChart(); // ✅ Add this line
 
-  // Remove animation class after animation ends
-  setTimeout(() => {
-    scoreElement.classList.remove("score-animate");
-  }, 500);
+const scoreElement = document.getElementById(team === "home" ? "home-score" : "away-score");
+scoreElement.classList.add("score-animate");
+
+setTimeout(() => {
+  scoreElement.classList.remove("score-animate");
+}, 500);
+
 }
 
 function recordStat(stat) {
@@ -431,23 +434,36 @@ function loadRoster(team, roster) {
     
 // Tab Switching Logic
 function showTab(tab) {
-    const homeTab = document.getElementById("home-stats-tab");
-    const awayTab = document.getElementById("away-stats-tab");
-    const homeButton = document.getElementById("home-tab");
-    const awayButton = document.getElementById("away-tab");
-  
-    if (tab === "home") {
+  const homeTab = document.getElementById("home-stats-tab");
+  const awayTab = document.getElementById("away-stats-tab");
+  const logTab = document.getElementById("player-log-tab");
+
+  const homeButton = document.getElementById("home-tab");
+  const awayButton = document.getElementById("away-tab");
+  const logButton = document.getElementById("log-tab");
+
+  // Hide all tabs
+  homeTab.style.display = "none";
+  awayTab.style.display = "none";
+  logTab.style.display = "none";
+
+  homeButton.classList.remove("active");
+  awayButton.classList.remove("active");
+  logButton.classList.remove("active");
+
+  // Show the selected tab
+  if (tab === "home") {
       homeTab.style.display = "block";
-      awayTab.style.display = "none";
       homeButton.classList.add("active");
-      awayButton.classList.remove("active");
-    } else if (tab === "away") {
-      homeTab.style.display = "none";
+  } else if (tab === "away") {
       awayTab.style.display = "block";
-      homeButton.classList.remove("active");
       awayButton.classList.add("active");
-    }
+  } else if (tab === "log") {
+      logTab.style.display = "block";
+      logButton.classList.add("active");
   }
+}
+
   
   // Main View Toggle
   function toggleView(view) {
@@ -506,8 +522,7 @@ let teamStats = {
 };
 
 
-// Initialize Charts
-// Initialize Charts
+
 function initializeCharts() {
   shootingChart = new ApexCharts(document.querySelector("#shooting-accuracy-chart"), {
       chart: { type: "bar", height: 400 },
@@ -519,48 +534,101 @@ function initializeCharts() {
   });
   shootingChart.render();
 
-  reboundsTurnoversChart = new ApexCharts(
-      document.querySelector("#rebounds-turnovers-chart"),
-      {
-          chart: { type: "bar", height: 400 },
-          series: [
-              { name: "Home", data: [0, 0] },
-              { name: "Away", data: [0, 0] },
-          ],
-          xaxis: { categories: ["Rebounds", "Turnovers"] },
-      }
-  );
-  reboundsTurnoversChart.render();
-}
-function prepareTeamStats(team) {
-  const data = [];
-  currentRoster[team].forEach((player) => {
-      const key = `${team} - ${player.name} #${player.number}`;
-      const stats = playerStats[key] || {
-          points: 0,
-          freeThrows: 0,
-          assists: 0,
-          rebounds: 0,
-          blocks: 0,
-          steals: 0,
-          turnovers: 0,
-          fouls: 0,
-      };
-      data.push([
-          player.name,          // Player Name
-          stats.points,         // Total Points
-          stats.freeThrows,     // Free Throws
-          stats.assists,        // Assists
-          stats.rebounds,       // Rebounds
-          stats.blocks,         // Blocks
-          stats.steals,         // Steals
-          stats.turnovers,      // Turnovers
-          stats.fouls,          // Fouls
-      ]);
+  // Update rebounds and turnovers chart
+  reboundsTurnoversChart = new ApexCharts(document.querySelector("#rebounds-turnovers-chart"), {
+      chart: { type: "bar", height: 400 },
+      series: [
+          { name: "Home", data: [0, 0, 0, 0, 0, 0] },  // Updated for 6 stats
+          { name: "Away", data: [0, 0, 0, 0, 0, 0] },  // Updated for 6 stats
+      ],
+      xaxis: {
+          categories: ["Rebounds", "Turnovers", "Assists", "Steals", "Blocks"]
+      },
+      colors: ["#007bff", "#dc3545"], // Blue for Home, Red for Away
   });
-  return data;
+
+  reboundsTurnoversChart.render();
+  // After showing the chart view
+  reboundsTurnoversChart.updateOptions({}, true, true);
 
 }
+
+// Function to Update the Chart When Stats Change
+function updateReboundsTurnoversChart() {
+  const homeData = [
+      teamStats.home.rebounds || 0,
+      teamStats.home.turnovers || 0,
+      teamStats.home.assists || 0,
+      teamStats.home.steals || 0,
+      teamStats.home.blocks || 0,
+      teamStats.home.fouls || 0,
+  ];
+
+  const awayData = [
+      teamStats.away.rebounds || 0,
+      teamStats.away.turnovers || 0,
+      teamStats.away.assists || 0,
+      teamStats.away.steals || 0,
+      teamStats.away.blocks || 0,
+      teamStats.away.fouls || 0,
+  ];
+
+  console.log("Updating chart with data:", homeData, awayData);
+
+  reboundsTurnoversChart.updateOptions({
+      series: [
+          { name: "Home", data: homeData },
+          { name: "Away", data: awayData },
+      ]
+  }, false, true);
+}
+
+
+function prepareTeamStats(team) {
+  const data = [];
+
+  currentRoster[team].forEach((player) => {
+    const key = `${team} - ${player.name} #${player.number}`;
+    const stats = playerStats[key] || {
+      points: 0,
+      freeThrows: 0,
+      assists: 0,
+      rebounds: 0,
+      blocks: 0,
+      steals: 0,
+      turnovers: 0,
+      fouls: 0,
+      shotsMade: { twoPoint: 0, threePoint: 0, freeThrow: 0 },
+      shotsAttempted: { twoPoint: 0, threePoint: 0, freeThrow: 0 },
+    };
+
+    function getPct(made, attempted) {
+      return attempted > 0 ? ((made / attempted) * 100).toFixed(1) + "%" : "0%";
+    }
+
+    const pct2pt = getPct(stats.shotsMade?.twoPoint || 0, stats.shotsAttempted?.twoPoint || 0);
+    const pct3pt = getPct(stats.shotsMade?.threePoint || 0, stats.shotsAttempted?.threePoint || 0);
+    const pctFT  = getPct(stats.freeThrows || 0, stats.shotsAttempted?.freeThrow || 0);
+
+    data.push([
+      player.name,
+      stats.points,
+      stats.freeThrows,
+      stats.assists,
+      stats.rebounds,
+      stats.blocks,
+      stats.steals,
+      stats.turnovers,
+      stats.fouls,
+      pct2pt,
+      pct3pt,
+      pctFT,
+    ]);
+  });
+
+  return data;
+}
+
 function updateGrids() {
   if (homeGrid) {
       homeGrid.updateConfig({ data: prepareTeamStats("home") }).forceRender();
@@ -582,7 +650,11 @@ function initializeGrids() {
   if (homeStatsContainer) {
       homeStatsContainer.innerHTML = ""; // Clear existing content
       homeGrid = new gridjs.Grid({
-          columns: ["Player", "Points", "Free Throws", "Assists", "Rebounds", "Blocks", "Steals", "Turnovers", "Fouls"],
+        columns: [
+          "Player", "Points", "Free Throws", "Assists", "Rebounds",
+          "Blocks", "Steals", "Turnovers", "Fouls",
+          "2PT%", "3PT%", "FT%"
+        ],
           data: prepareTeamStats("home"),
           pagination: true,
           search: true,
@@ -595,7 +667,11 @@ function initializeGrids() {
   if (awayStatsContainer) {
       awayStatsContainer.innerHTML = ""; // Clear existing content
       awayGrid = new gridjs.Grid({
-          columns: ["Player", "Points", "Free Throws", "Assists", "Rebounds", "Blocks", "Steals", "Turnovers", "Fouls"],
+        columns: [
+          "Player", "Points", "Free Throws", "Assists", "Rebounds",
+          "Blocks", "Steals", "Turnovers", "Fouls",
+          "2PT%", "3PT%", "FT%"
+        ],        
           data: prepareTeamStats("away"),
           pagination: true,
           search: true,
@@ -615,17 +691,20 @@ function initializePlayerStats() {
         currentRoster[team].forEach((player) => {
             const key = `${team} - ${player.name} #${player.number}`;
             if (!playerStats[key]) {
-                playerStats[key] = {
-                    points: 0,
-                    freeThrows: 0,
-                    assists: 0,
-                    rebounds: 0,
-                    blocks: 0,
-                    steals: 0,
-                    turnovers: 0,
-                    fouls: 0,
-                    timestamps: [],
-                };
+              playerStats[key] = {
+                points: 0,
+                freeThrows: 0,
+                assists: 0,
+                rebounds: 0,
+                blocks: 0,
+                steals: 0,
+                turnovers: 0,
+                fouls: 0,
+                shotsMade: { twoPoint: 0, threePoint: 0, freeThrow: 0 },
+                shotsAttempted: { twoPoint: 0, threePoint: 0, freeThrow: 0 },
+                timestamps: [],
+              };
+              
             }
         });
     });
@@ -639,6 +718,10 @@ function generateStats() {
       home: [["Player", "Points", "Free Throws", "Assists", "Rebounds", "Blocks", "Steals", "Turnovers", "Fouls", "Timestamps"]],
       away: [["Player", "Points", "Free Throws", "Assists", "Rebounds", "Blocks", "Steals", "Turnovers", "Fouls", "Timestamps"]],
   };
+
+  // Clear previous log
+  const logContainer = document.getElementById("player-log");
+  logContainer.innerHTML = ""; 
 
   for (const playerKey in playerStats) {
       const stats = playerStats[playerKey];
@@ -658,6 +741,14 @@ function generateStats() {
               stats.fouls || 0,
               stats.timestamps.join(", "),
           ]);
+
+          // ✅ **Update Live Player Log**
+          stats.timestamps.forEach(timestamp => {
+              const logEntry = document.createElement("div");
+              logEntry.classList.add("log-entry");
+              logEntry.innerHTML = `<strong>${playerName} (${team})</strong> - ${timestamp}`;
+              logContainer.appendChild(logEntry);
+          });
       }
   }
 
@@ -812,19 +903,24 @@ function recordStat(stat) {
      switch (stat) {
       case "2 Points":
             playerStats[key].points += 2;
+            playerStats[key].shotsMade.twoPoint += 1;
             teamStats[selectedPlayer.team].points.twoPoint += 2;
             teamStats[selectedPlayer.team].shotsMade.twoPoint += 1; // Increment shot count
+            playerStats[key].shotsAttempted.twoPoint += 1;
             break;
         case "3 Points":
             playerStats[key].points += 3;
+            playerStats[key].shotsMade.threePoint += 1;
             teamStats[selectedPlayer.team].points.threePoint += 3;
             teamStats[selectedPlayer.team].shotsMade.threePoint += 1; // Increment shot count
+            playerStats[key].shotsAttempted.threePoint += 1;
             break;
         case "Free Throw":
             playerStats[key].points += 1;
             playerStats[key].freeThrows += 1;
             teamStats[selectedPlayer.team].points.freeThrow += 1;
             teamStats[selectedPlayer.team].shotsMade.freeThrow += 1; // Increment shot count
+            playerStats[key].shotsAttempted.freeThrow += 1;
             break;
       case "Rebound":
           playerStats[key].rebounds += 1;
@@ -834,19 +930,23 @@ function recordStat(stat) {
           playerStats[key].turnovers += 1;
           teamStats[selectedPlayer.team].turnovers += 1;
           break;
-      case "Assist":
-          playerStats[key].assists += 1;
-          break;
-      case "Block":
-          playerStats[key].blocks += 1;
-          break;
-      case "Steal":
-          playerStats[key].steals += 1;
-          break;
-      case "Foul":
-          playerStats[key].fouls += 1;
-          break;
-      default:
+        case "Assist":
+            playerStats[key].assists += 1;
+            teamStats[selectedPlayer.team].assists += 1; 
+            break;
+          case "Block":
+            playerStats[key].blocks += 1;
+            teamStats[selectedPlayer.team].blocks += 1; 
+            break;
+          case "Steal":
+            playerStats[key].steals += 1;
+            teamStats[selectedPlayer.team].steals += 1;
+            break;
+          case "Foul":
+            playerStats[key].fouls += 1;
+            teamStats[selectedPlayer.team].fouls += 1; 
+            break;
+          default:
           console.error("Unknown stat type:", stat);
           return; // Stop execution if the stat type is invalid
   }
@@ -855,9 +955,54 @@ function recordStat(stat) {
 
     // Update charts and grids
     updateShootingChart();
-    updateReboundsChart();
+    updateReboundsTurnoversChart()
     updateGrids();
 }
+function recordShotAttempt(stat) {
+  if (!selectedPlayer || !selectedPlayer.player) {
+    alert("Please select a player first.");
+    return;
+  }
+
+  const key = `${selectedPlayer.team} - ${selectedPlayer.player.name} #${selectedPlayer.player.number}`;
+
+  // ✅ Check player-level structure
+  if (!playerStats[key]) {
+    console.error("Player stats not initialized for:", key);
+    return;
+  }
+
+  if (!playerStats[key].shotsAttempted) {
+    playerStats[key].shotsAttempted = { twoPoint: 0, threePoint: 0, freeThrow: 0 };
+  }
+
+  // ✅ Check team-level structure
+  if (!teamStats[selectedPlayer.team].shotsAttempted) {
+    teamStats[selectedPlayer.team].shotsAttempted = { twoPoint: 0, threePoint: 0, freeThrow: 0 };
+  }
+
+  switch (stat) {
+    case "2 Points":
+      playerStats[key].shotsAttempted.twoPoint += 1;
+      teamStats[selectedPlayer.team].shotsAttempted.twoPoint += 1;
+      break;
+    case "3 Points":
+      playerStats[key].shotsAttempted.threePoint += 1;
+      teamStats[selectedPlayer.team].shotsAttempted.threePoint += 1;
+      break;
+    case "Free Throw":
+      playerStats[key].shotsAttempted.freeThrow += 1;
+      teamStats[selectedPlayer.team].shotsAttempted.freeThrow += 1;
+      break;
+  }
+
+  const time = getFormattedTime();
+  playerStats[key].timestamps.push(`Missed ${stat} at ${time}`);
+  updateShootingChart();
+  updateGrids();
+  updateLiveLog();
+}
+
 
 
 function updatePlayerDetailsUI() {
@@ -893,15 +1038,7 @@ function updateShootingChart() {
 
 
 
-function updateReboundsChart() {
-  const homeData = [teamStats.home.rebounds, teamStats.home.turnovers];
-  const awayData = [teamStats.away.rebounds, teamStats.away.turnovers];
 
-  reboundsTurnoversChart.updateSeries([
-      { name: "Home", data: homeData },
-      { name: "Away", data: awayData },
-  ]);
-}
 
 
 // Initialize Everything on Page Load
@@ -912,3 +1049,120 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+function toggleView(view) {
+  // Hide all views
+  document.querySelectorAll('.toggle-content').forEach(function(content) {
+    content.classList.remove('active');
+  });
+
+  // Remove active class from all buttons
+  document.querySelectorAll('.toggle-btn').forEach(function(button) {
+    button.classList.remove('active');
+  });
+
+  // Show the selected view and set the button as active
+  document.getElementById(`${view}-view`).classList.add('active');
+  document.getElementById(`${view}-toggle`).classList.add('active');
+}
+
+
+
+function updateLiveLog() {
+  const logContainer = document.getElementById("player-log");
+
+  if (!logContainer) {
+      console.error("Player log container not found!");
+      return;
+  }
+
+  logContainer.innerHTML = ""; // Clear previous log entries
+
+  for (const playerKey in playerStats) {
+      const stats = playerStats[playerKey];
+      const [team, playerName] = playerKey.split(" - ");
+
+      // ✅ Update log with timestamps
+      stats.timestamps.forEach(timestamp => {
+          const logEntry = document.createElement("div");
+          logEntry.classList.add("log-entry");
+          logEntry.innerHTML = `<strong>${playerName} (${team})</strong> - ${timestamp}`;
+          logContainer.appendChild(logEntry);
+      });
+  }
+
+  // Auto-scroll to latest log
+  logContainer.scrollTop = logContainer.scrollHeight;
+}
+function saveGame() {
+  const gameName = prompt("Enter a name for this game:");
+  if (!gameName) return;
+
+  const gameData = {
+    name: gameName,
+    date: new Date().toISOString(),
+    homeTeam,
+    awayTeam,
+    playerStats,
+    teamStats,
+    finalScore: { home: homeScore, away: awayScore },
+    log: document.getElementById("player-log").innerHTML,
+  };
+
+  let savedGames = JSON.parse(localStorage.getItem("savedGames") || "[]");
+  savedGames.push(gameData);
+  localStorage.setItem("savedGames", JSON.stringify(savedGames));
+
+  alert("Game saved successfully!");
+}
+function loadSavedGames() {
+  const savedGames = JSON.parse(localStorage.getItem("savedGames") || "[]");
+  const list = document.getElementById("saved-games-list");
+  list.innerHTML = "";
+
+  savedGames.forEach((game, index) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${game.name}</strong> (${new Date(game.date).toLocaleString()})
+      <button class="tab" onclick="loadGame(${index})">▶️ Load</button>
+      <button class="tab"  onclick="deleteGame(${index})">🗑️ Delete</button>
+    `;
+    list.appendChild(li);
+  });
+}
+function deleteGame(index) {
+  if (!confirm("Are you sure you want to delete this game?")) return;
+
+  let savedGames = JSON.parse(localStorage.getItem("savedGames") || "[]");
+  savedGames.splice(index, 1); // Remove game at index
+  localStorage.setItem("savedGames", JSON.stringify(savedGames));
+
+  loadSavedGames(); // Refresh the list
+}
+
+function loadGame(index) {
+  const savedGames = JSON.parse(localStorage.getItem("savedGames") || "[]");
+  const game = savedGames[index];
+  if (!game) return;
+
+  // Restore data
+  homeTeam = game.homeTeam;
+  awayTeam = game.awayTeam;
+  playerStats = game.playerStats;
+  teamStats = game.teamStats;
+  homeScore = game.finalScore.home;
+  awayScore = game.finalScore.away;
+
+  // Apply to UI
+  loadRoster("home", homeTeam.roster);
+  loadRoster("away", awayTeam.roster);
+  initializeActivePlayers();
+  initializeGrids();
+  updateGrids();
+  updateShootingChart();
+  updateReboundsTurnoversChart();
+  document.getElementById("home-score").textContent = homeScore;
+  document.getElementById("away-score").textContent = awayScore;
+  document.getElementById("player-log").innerHTML = game.log;
+
+  alert(`Loaded game: ${game.name}`);
+}
