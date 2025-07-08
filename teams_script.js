@@ -163,3 +163,113 @@ function renderTeams() {
     });
   
     localStorage.setItem('teamsData', JSON.stringify(teams));}
+    // Only run if no teams exist
+    const coreTeams = [
+      {
+        name: "Moss Park",
+        wins: 0,
+        losses: 0,
+        roster: [
+          { name: "Jadane Bennett", number: 13 },
+          { name: "Kaiden Edwards", number: 2 },
+          { name: "Searahani Mitchell", number: 10 },
+          { name: "Amru Zein", number: 5 },
+          { name: "Adam", number: 8 },
+          { name: "Urijah Cooper", number: 7 },
+          { name: "Abdu Ahmed", number: 9 },
+          { name: "Riyad", number: 12 },
+          { name: "Cruz", number: 3 }
+        ]
+      },
+      {
+        name: "Mutual Street",
+        wins: 0,
+        losses: 0,
+        roster: [
+          { name: "Justice Clark", number: 8 },
+          { name: "Kaine Hamilton-Wright", number: 2 },
+          { name: "David Adesanya", number: 5 },
+          { name: "Kevin Vo", number: 0 },
+          { name: "Mylo Noel", number: 11 },
+          { name: "John-Williams Asamoah", number: 7 },
+          { name: "Dayton L", number: 3 }
+        ]
+      },
+      {
+        name: "Pelham Park",
+        wins: 0,
+        losses: 0,
+        roster: [
+          { name: "Triheim", number: 10 },
+          { name: "Jahzari", number: 3 },
+          { name: "Truzane", number: 4 },
+          { name: "Pedro", number: 9 },
+          { name: "Chad", number: 8 },
+          { name: "Jason", number: 5 },
+          { name: "Kemyron", number: 0 },
+          { name: "Deshawn", number: 2 },
+          { name: "Prynce", number: 1 }
+        ]
+      },
+      {
+        name: "Tobermory",
+        wins: 0,
+        losses: 0,
+        roster: [
+          { name: "Dayshaun", number: 0 },
+          { name: "Devonte", number: 1 },
+          { name: "Dayveon", number: 2 },
+          { name: "Antoine", number: 3 },
+          { name: "Ruby", number: 4 },
+          { name: "Nick", number: 6 },
+          { name: "Raheem", number: 7 },
+          { name: "Jamal", number: 8 },
+          { name: "Rohan", number: 9 },
+          { name: "Taejaun", number: 10 },
+          { name: "Ramzi", number: 11 },
+          { name: "Ryan", number: 12 }
+        ]
+      },
+      {
+        name: "Victoria Park",
+        wins: 0,
+        losses: 0,
+        roster: [
+          { name: "Ali Ricketts", number: 0 },
+          { name: "Edric Onebunne", number: 4 },
+          { name: "Malik Gittens", number: 5 },
+          { name: "Darius Alai", number: 6 },
+          { name: "Shaheem Tantawi", number: 2 },
+          { name: "Chyen Daniel", number: 7 },
+          { name: "Cameron Soulliere", number: 8 },
+          { name: "Darell Osmond", number: 3 },
+          { name: "Phillip Byers", number: 11 },
+          { name: "Makai Logan", number: 9 },
+          { name: "Shy Pinnock", number: 1 },
+          { name: "Josh Holder", number: 10 }
+        ]
+      },
+      {
+        name: "Brahms-Sparroways",
+        wins: 0,
+        losses: 0,
+        roster: [
+          { name: "Abdi Malik Hussein", number: 9 },
+          { name: "Anastasios Balkos", number: 1 },
+          { name: "Luther Hinckson", number: 3 },
+          { name: "Davonta Jackson", number: 10 },
+          { name: "Zachariah Eweka", number: 0 },
+          { name: "Kymanie Buckle", number: 5 },
+          { name: "Isaiah Wall-Grant", number: 11 },
+          { name: "Rashawn Singh", number: 7 },
+          { name: "Jehaziah Springer", number: 4 },
+          { name: "Nam Vo-Lacey", number: 2 },
+          { name: "Josh Duku", number: 6 }
+        ]
+      }
+    ];
+    
+    // Save to localStorage and reload
+    localStorage.setItem("teams", JSON.stringify(coreTeams));
+ 
+    
